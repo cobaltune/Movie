@@ -1,0 +1,55 @@
+
+#2.0 Introduction
+
+Recat JS가 우리를 위해 해결해 주는 문제에 대한 이해
+- 웹사이트에 UI를 interactivity(상호작용) 하게 만들어줌
+
+간단한 바닐라 JS앱
+- 화면에 버튼 하나와 텍스트 하나만 존재
+- 매번 버튼을 클릭할 때마다 - 화면의 텍스트를 업데이트 ⇒ 클릭을 세고 싶음
+
+이번 클래스에서 따라갈 접근 방법
+: 바닐라 JS와 React JS를 비교하고, 왜 React JS가 더 좋은지 살펴볼 예정
+
+
+#2.1 Before React
+
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <span>Total clicks: 0</span>
+      <button id="btn">Click me</button>
+    </body>
+    <script>
+      let counter = 0;
+      const button = document.getElementById('btn');
+      const span = document.querySelector('span');
+      function handleClick() {
+        counter = counter + 1;
+        span.innerText = `Total clicks: ${counter}`;
+      }
+      button.addEventListener('click', handleClick);
+    </script>
+  </html>
+
+HTML을 만들고 - javascript에서 가져오고 - event를 감지하고 - 데이터를 업데이트 - html을 업데이트
+
+위와 같은 방식으로 작업하면, 계속 가져와서 - 계속 event listener를 달고 - handleClick 만들고
+- handleSecondClick 만들고 - handleeeeee 늪에 빠짐
+
+
+React JS를 설치하기 위해서는 두 개의 javascript 코드를 import 해야 함
+- react
+- react-dom
+
+  <!DOCTYPE html>
+  <html>
+    <body></body>
+    <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  </html>
+
+
+#2.2 Our First React Element
+
+더 편리하고, 더 나은 아이디어이며, 좀 더 설계된 방식
