@@ -158,3 +158,67 @@ React JS는 우리가 해왔던 방식을 거꾸로 하고 있다는 것을 설�
 `React.createElement`
 : React JS에게 update가 필요한 HTML element를 update할 것이라는 말
   ⇒ React JS는 user에게 보여질 내용을 컨트롤할 수 있다는 뜻
+
+
+#2.3 Events in React
+
+만들 것
+- 버튼
+- 버튼에서 일어나는 `event`를 어떻게 감지하는지
+
+  const root = document.getElementById('root');
+      const span = React.createElement('span', null, "Hello I'm a span");
+      const btn = React.createElement('button', null, 'Click me');
+      ReactDOM.render(btn, root);
+
+  // 출력값 html에서
+  <body>
+    <div id="root">
+      <button>Click me</button>
+    </div>
+
+
+그런데 `<span>`과 `<button>`두 가지 모두 `render`하고 싶다면?
+
+  const root = document.getElementById('root');
+      const span = React.createElement('h3', null, "Hello I'm a span");
+      const btn = React.createElement('button', null, 'Click me');
+      const container = React.createElement('div', null, [span, btn]);
+      ReactDOM.render(container, root);
+
+  // 출력값 html에서
+  <body>
+    <div id="root">
+      <div>
+        <span>Hello I'm a span</span>
+        <button>Click me</button>
+      </div>
+    </div>
+
+⇒ 기본적으로 2개의 component를 가지는 component를 생성
+
+
+id=”btn” - <button>을 가져와서 - addEventListener를 붙이고 - listener function을 만드는 과정을
+<button>에 peroperty를 주는 React JS로 대체
+
+  const root = document.getElementById('root');
+      const h3 = React.createElement(
+        'h3',
+        {
+          id: 'title',
+          onMouseEnter: () => console.log('Mouse enter'),
+        },
+        "Hello I'm a span",
+      );
+      const btn = React.createElement(
+        'button',
+        {
+          onClick: () => console.log("I'm clicked"),
+          style: {
+            backgroundColor: 'tomato',
+          },
+        },
+        'Click me',
+      );
+      const container = React.createElement('div', null, [h3, btn]);
+      ReactDOM.render(container, root);
