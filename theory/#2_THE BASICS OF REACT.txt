@@ -81,10 +81,10 @@ react-dom은 library, 또는 package로 모든 React element들을 HTML body에 
 그래서 많은 사람들이 하는 방식은
 
   <body>
-    <div id="#root"></div>  <!--마지막으로 적는 html-->
+    <div id="root"></div>  <!--마지막으로 적는 html-->
 
 `<body>`에 `<div>`를 적고 `ReactDOM`에게 `span`을 `#root` 안에 두라고 함
-이렇게 하려면, 먼저 `#root`를 가져와야 함
+이렇게 하려면, 먼저 `root`를 가져와야 함
 
 
   // 일반적인 javascript
@@ -95,7 +95,7 @@ react-dom은 library, 또는 package로 모든 React element들을 HTML body에 
 
   // 출력값 html에서
   <body>
-    <div id="#root">
+    <div id="root">
       <span></span>
     </div>
 
@@ -116,7 +116,7 @@ ex 1) 두 번째 (argument)로 둘 수 있는 것은 `<span>`의 property임
 
   // 출력값 html에서
   <body>
-    <div id="#root">
+    <div id="root">
       <span id="sexy-span"></span>
     </div>
 
@@ -135,7 +135,7 @@ ex 2) 세번째 (argument)로  ⇒ 참고로 이건 절대 다시 할일 없는 
 
   // 출력값 html에서
   <body>
-    <div id="#root">
+    <div id="root">
       <span id="sexy-span">Hello I'm a span</span>
     </div>
 
@@ -146,7 +146,7 @@ ex 2) 세번째 (argument)로  ⇒ 참고로 이건 절대 다시 할일 없는 
 
   // 출력값 html에서
   <body>
-    <div id="#root">
+    <div id="root">
       <span id="sexy-span" style="color: red;">Hello I'm a span</span>
     </div>
 
