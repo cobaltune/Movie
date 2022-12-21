@@ -95,8 +95,9 @@ react-dom은 library, 또는 package로 모든 React element들을 HTML body에 
 
   // 출력값 html에서
   <body>
-    <div id="#root"></div>
+    <div id="#root">
       <span></span>
+    </div>
 
 
 물론 `<span>`은 지금 비어있음
@@ -115,8 +116,9 @@ ex 1) 두 번째 (argument)로 둘 수 있는 것은 `<span>`의 property임
 
   // 출력값 html에서
   <body>
-    <div id="#root"></div>
+    <div id="#root">
       <span id="sexy-span"></span>
+    </div>
 
 
 그래도 여전히 `<span>`이 비어있으니 `<span>`안에 무언가를 넣어보자
@@ -133,8 +135,9 @@ ex 2) 세번째 (argument)로  ⇒ 참고로 이건 절대 다시 할일 없는 
 
   // 출력값 html에서
   <body>
-    <div id="#root"></div>
+    <div id="#root">
       <span id="sexy-span">Hello I'm a span</span>
+    </div>
 
 
 <style>도 줄 수 있음
@@ -143,8 +146,9 @@ ex 2) 세번째 (argument)로  ⇒ 참고로 이건 절대 다시 할일 없는 
 
   // 출력값 html에서
   <body>
-    <div id="#root"></div>
+    <div id="#root">
       <span id="sexy-span" style="color: red;">Hello I'm a span</span>
+    </div>
 
 
 이번 강의의 요점은 지루한 예제를 보여줌으로써
