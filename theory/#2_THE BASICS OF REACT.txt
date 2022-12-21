@@ -52,4 +52,105 @@ React JS를 설치하기 위해서는 두 개의 javascript 코드를 import 해
 
 #2.2 Our First React Element
 
-더 편리하고, 더 나은 아이디어이며, 좀 더 설계된 방식
+React JS 규칙 중 하나
+- <HTML>을 페이지에 직접 작성하지 않는 대신에 javascript 코드를 사용
+
+React JS로 element를 생성하는 어려운 방법 (= 개발자들이 작업하는 방식은 아님)
+
+  const span = React.createElement('span');const span = React.createElement('span');
+
+  // const !원하는 이름! = React.createElement('!생성하고자 하는 HTML 태그 이름!');
+
+
+React JS가 HTML을 생성하려면 react-dom을 사용해야 함
+React JS는 어플리케이션이 interactive하도록 만들어주는 library이고
+react-dom은 library, 또는 package로 모든 React element들을 HTML body에 둘 수 있도록 함
+
+
+<body> 안에 React element를 가져다 두기
+
+  const span = React.createElement('span');
+      ReactDOM.render(span, );
+
+`render`
+: React element를 가지고 HTML로 만들어 배치한다는 것 (= 사용자에게 보여준다)
+
+
+`ReactDOM`에게 어디에 `span`을 둘 것인지 알려줘야 함
+
+그래서 많은 사람들이 하는 방식은
+
+  <body>
+    <div id="#root"></div>  <!--마지막으로 적는 html-->
+
+`<body>`에 `<div>`를 적고 `ReactDOM`에게 `span`을 `#root` 안에 두라고 함
+이렇게 하려면, 먼저 `#root`를 가져와야 함
+
+
+  // 일반적인 javascript
+  const root = document.getElementById("root");
+
+  const span = React.createElement('span');
+      ReactDOM.render(span, root);
+
+  // 출력값 html에서
+  <body>
+    <div id="#root"></div>
+      <span></span>
+
+
+물론 `<span>`은 지금 비어있음
+: `createElement`에는 우리가 더 작성할 수 있는 (argument)가 있음
+
+ex 1) 두 번째 (argument)로 둘 수 있는 것은 `<span>`의 property임
+      property는
+      - `class name`이 될 수도 있고,
+      - `id`가 될 수도 있음
+
+  // 일반적인 javascript
+  const root = document.getElementById("root");
+
+  const span = React.createElement('span', {id: "sexy-span"});
+      ReactDOM.render(span, root);
+
+  // 출력값 html에서
+  <body>
+    <div id="#root"></div>
+      <span id="sexy-span"></span>
+
+
+그래도 여전히 `<span>`이 비어있으니 `<span>`안에 무언가를 넣어보자
+
+ex 2) 세번째 (argument)로  ⇒ 참고로 이건 절대 다시 할일 없는 예시
+
+  const root = document.getElementById('root');
+      const span = React.createElement(
+        'span',
+        { id: sexy - span },
+        "Hello I'm a span",
+      );
+      ReactDOM.render(span, root);
+
+  // 출력값 html에서
+  <body>
+    <div id="#root"></div>
+      <span id="sexy-span">Hello I'm a span</span>
+
+
+<style>도 줄 수 있음
+
+  { id: sexy - span, style: { color: 'red' } },
+
+  // 출력값 html에서
+  <body>
+    <div id="#root"></div>
+      <span id="sexy-span" style="color: red;">Hello I'm a span</span>
+
+
+이번 강의의 요점은 지루한 예제를 보여줌으로써
+React JS는 우리가 해왔던 방식을 거꾸로 하고 있다는 것을 설명한 것
+(Javascript에서 시작하고, HTML에서 끝나는)
+
+`React.createElement`
+: React JS에게 update가 필요한 HTML element를 update할 것이라는 말
+  ⇒ React JS는 user에게 보여질 내용을 컨트롤할 수 있다는 뜻
