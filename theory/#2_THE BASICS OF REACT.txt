@@ -354,3 +354,87 @@ Babel standalone 설치 사이트
 
 콘솔창에서 <scrtpt>를 보면 우리가 Babel한테 넘겨준 코드를
 Babel이 브라우저가 읽을 수 있는 코드로 바꿔서 <head>에 담아둠
+
+
+#2.6 JSX part Two
+
+JSX를 사용해서 `render`
+
+  const Container = <div>Title Button</div>
+  ReactDOM.render(Container, root);
+
+
+*문제
+새로고침하면 (실제로 에러는 아니지만) 에러가 발생하는데
+`const` … like as 정의한 모든 요소들을 하나도 포함시키고 있지 않아서 텍스트만 나타남
+
+
+Title이나 Button을 포함시키기 위해서
+
+  const Title = () => (
+        <h3 id='title' onMouseEnter={() => console.log('mouse enter')}>
+          Hello I'm a title
+        </h3>
+      );
+
+      const Button = () => (
+        <button
+          style={{
+            backgroundColor: 'tomato',
+          }}
+          onClick={() => console.log("I'm clicked")}
+        >
+          Click me
+        </button>
+      );
+
+arrow function를 통해 함수로 만들어줘야 함
+
+
+위 arrow function은 아래 (기존 우리가 사용하던) `function`과 같음
+⇒ 함수를 만들어서 `return`해주는 것과 같음
+
+  function Title() {
+    return (
+      <h3 id="title" onMouseEnter={() => console.log("mouse enter")>
+        Hello I'm a title
+      </h3>
+    );
+  }
+
+
+마치 일반적인 <HTML> 태그인 것처럼 포함시켜줘야 하는데
+
+  const Container = (
+        <div>
+          <Title /> <Button />
+        </div>
+      );
+
+  /* 코드해석
+  <div> 태그를 렌더링하고 있는 컴포넌트가 하나 있는데,
+  `Title`에 관련된 코드를 포함시키고
+  `<Title />`로 적는 건 `return`에 있는 `<h3>`를 복붙하는 것과 같음 */
+
+이렇게 함으로써 여러 컴포넌트들이 합쳐진 구성을 만듦
+
+
+`Container`도 함수로 수정하고 `render`도 같이 수정
+
+  const Container = () => (
+        <div>
+          <Title /> <Button />
+        </div>
+      );
+      ReactDOM.render(<Container />, root);
+
+
+** 직접 만든 컴포넌트를 렌더링 해서 다른 곳에서 사용할 때는
+항상 (컴포넌트의 첫 글자는 반드시) 대문자로 작성해야 함
+만약 소문자로 작성하면 React랑 JSX는 <HTML>태그인 `<button>`이라고 생각함
+
+위와 같이 JSX는 여러 가지 작은 요소로 나누어 관리할 수 있게 해줌
+그래서 여러 요소로 잘게 쪼개서 만들어 합쳐주기만 하면 됨
+⇒ 보기 쉽게 코드를 분리한 뒤에 함께 렌더링 한 단 소리
+
+∴ 컴포넌트를 다른 컴포넌트 안에 넣는 방법과 같다
