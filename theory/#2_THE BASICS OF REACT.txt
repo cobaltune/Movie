@@ -266,3 +266,87 @@ props 안에서 event listener를 등록할 수 있음
 
 출처 사이트
 [https://blog.naver.com/siempre_hermosa/222882677559](https://blog.naver.com/siempre_hermosa/222882677559)
+
+
+#2.5 JSX
+
+`createElement`를 대체할 수 있는 방법으로 JSX,
+JSX는 javascript를 확장한 문법
+
+생긴 게 HTML이랑 비슷해서 우리가 HTML에서 사용한 문법과 흡사한 문법을 사용하여
+JSX로 React요소를 만드는 게 개발자들 입장에서는 편함
+
+  const h3 = React.createElement(
+  "h3",
+  {
+    id:"title",
+    onMouseEnter: () => console.log("mouse enter"),
+  },
+  "Hello I'm a title"
+  );
+
+위 코드를 JSX를 이용해서 똑같은 컴포넌트를 만들어보자
+
+  const Title = <h3 id="title"
+  onMouseEnter={() => console.log("mouse enter")}>
+  Hello I'm a title</h3>
+
+`onMouseEnter`와 같은 property는 마치 <HTML>태그의 속성인 것처럼 추가
+
+
+만약 `<image>`가 있으면
+
+  const Title = <img src="" id="title"
+  onMouseEnter={() => console.log("mouse enter")}>
+  Hello I'm a title</h3>
+
++) React.JS extension으로 `event listener`들을 처리
+
+
+  const btn = React.createElement(
+  "button",
+  {
+  onClick: () => console.log("I'm clicked"),
+  style: {
+    backgroundColor: "tomato",
+    },
+  },
+  "Click me"
+  );
+
+위 코드를 JSX를 이용해서 똑같은 컴포넌트를 만들어보자 2
+
+  const Button = (
+  <button
+    style={{
+      backgroundColor: "tomato",
+    }}
+    onClick={() => console.log("I'm clicked")}
+  >
+    Click me
+  </button>
+  );
+
+
+니콜라스가 `createElement`를 사용하지 않는 이유
+: 여러가지 것들을 기억해가면서 진행해야 되기 때문
+
+*문제
+저장하고 새로고침 하면 에러가 발생하는데,
+브라우저가 온전히 JSX를 이해하는 것은 아니라서 에러가 발생함
+
+브라우저가 JSX를 이해할 수 있게(한 번 변환해주는)설치해야 하는데
+Babel은 코드를 변환해주는 녀석인데 우리가 JSX로 적은 코드를 브라우저가 이해할 수 있는 형태로 바꿔줌
+
+Babel standalone 설치 사이트
+[https://babeljs.io](https://babeljs.io/)
+
+
+지금은 배우고 있어서 `<script>` 복붙
+
+  <script src="https://unpkg.com/@babel/standaolne/babel.min.js"></script>
+  <script type="text/babel"></script>
+
+이제 `container`를 고쳐주면 부야 ~
+
+  const container = React.createElement('div', null, [Title, Button]);
