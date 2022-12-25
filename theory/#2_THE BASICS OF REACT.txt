@@ -344,9 +344,13 @@ Babel standalone 설치 사이트
 
 지금은 배우고 있어서 `<script>` 복붙
 
-  <script src="https://unpkg.com/@babel/standaolne/babel.min.js"></script>
-  <script type="text/babel"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
 
 이제 `container`를 고쳐주면 부야 ~
 
   const container = React.createElement('div', null, [Title, Button]);
+
+
+콘솔창에서 <scrtpt>를 보면 우리가 Babel한테 넘겨준 코드를
+Babel이 브라우저가 읽을 수 있는 코드로 바꿔서 <head>에 담아둠
