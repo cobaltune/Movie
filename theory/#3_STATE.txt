@@ -1,0 +1,115 @@
+
+#3.0 Understanding State
+
+state (in React.js)
+: (기본적으로) 데이터가 저장되는 곳
+
+
+vanilla.js로 진행 중인 예제를 완성하려면
+  - 현재 : `counter`를 증가시키고, 그걸 UI에 디스플레이
+  - 개선 : state로 counter(값이 바뀌는 데이터) 수정
+
+우선 기존 코드 세팅 변경
+
+  const root = document.getElementById('root');
+
+      const Container = () => (
+        <div>
+          <h3>Total clicks: 0</h3>
+          <button>Click me</button>
+        </div>
+      );
+      ReactDOM.render(<Container />, root);
+  
+
+React.js 코드 내에서 카운트를 셀 수 있게 1
+: 별로 좋지 않은 방식
+  (값을 바꿀 때마다, 다시 렌더링 하는 걸 잊어서는 안되기 때문)
+
+  const root = document.getElementById('root');
+
+      let counter = 0;
+      function countUp() {
+        counter = counter + 1;
+      }
+
+      const Container = () => (
+        <div>
+          <h3>Total clicks: {counter}</h3>
+          <button onClick={countUp}>Click me</button>
+        </div>
+      );
+      ReactDOM.render(<Container />, root);
+
+
+*문제
+프로그램이 동작하는 원리를 생각해 볼 때, 현재 컴포넌트를 한 번만 렌더링하고 있기 때문에
+페이지가 로드될 때 UI가 업데이트가 되고 있지 않고 있음
+
+: `Container`를 렌더링하고 `root`에 담는데,
+`render`에 `<Container />`에서 `counter` 값으로 `0`이 됨 (하지만 클릭 시, 카운트는 증가하고 있음)
+
+`Container`를 re렌더링하고 다시 보여줘야 함 (새로운 버전의 `Container`)
+⇒ `countUp`을 호출할 때마다 `ReactDOM.render`를 다시 호출
+
+  const root = document.getElementById('root');
+
+      let counter = 0;
+      function countUp() {
+        counter = counter + 1;
+        ReactDOM.render(<Container />, root);
+      }
+
+      const Container = () => (
+        <div>
+          <h3>Total clicks: {counter}</h3>
+          <button onClick={countUp}>Click me</button>
+        </div>
+      );
+      ReactDOM.render(<Container />, root);
+
+
+이렇게도 할 수 있지만 아래가 보다 나음
+
+  const root = document.getElementById('root');
+
+      let counter = 0;
+      function countUp() {
+        counter = counter + 1;
+        render();
+      }
+
+      function render() {
+        ReactDOM.render(<Container />, root);
+      }
+
+      const Container = () => (
+        <div>
+          <h3>Total clicks: {counter}</h3>
+          <button onClick={countUp}>Click me</button>
+        </div>
+      );
+      render();
+    
+
+다시 말하지만 `const Container = () => (`는 just `function`
+
+  function Container (){
+    return
+      <div>
+          <h3>Total clicks: {counter}</h3>
+          <button onClick={countUp}>Click me</button>
+      </div>
+  }
+
+위 코드와 같음
+
+
+여기서 React가 얼마나 좋은지 잠시 토크
+  - Vanilla.js 예시를 열어서 - 요소 검사를 열고 - 버튼을 클릭하면
+      - chrome에서 `<body>`랑 `<span>`요소들이 업데이트되고 있는 걸 바로 보여줌
+      
+  - React.js 예시를 열어서 - 요소 검사를 열고 - 버튼을 클릭하면
+      - UI에서 바뀐 부분만 업데이트됨
+
+위와 같이 인터렉티브한걸 만들기에 최적화되어 있기 때문에 React를 이용함
