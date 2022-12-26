@@ -187,3 +187,59 @@ ex 2) 빈 배열을 만들고 - 첫 번째 요소를 꺼내서 a라는 변수 �
   const [a, b, c] = x;
 
 ∴ React.js가 data를 담는 것과 업데이트하는 걸 어떻게 도와주는지 배움
+
+
+#3.2 setState part Two
+
+배울 것
+- 왜 `modifier`가 필요한지
+
+
+`counter`를 업데이트하는데 `modifier`함수를 쓰려고 함
+`modifier` 함수는 값을 하나 받는데, 어떤 값을 부여하던 그 값으로 업데이트하고 리렌더링하려고 함
+
+  const root = document.getElementById('root');
+      function App() {
+        const [counter, modifier] = React.useState(0);
+        const onClick = () => {
+          modifier(12345678);
+        };
+        return (
+          <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={onClick}>Click me</button>
+          </div>
+        );
+      }
+      ReactDOM.render(<App />, root);
+
+  // UI에서
+  Total clicks: 12345678
+
+  /* 코드 해석
+  React.useState 함수는 counter 같은 데이터를 숫자형 데이터로 건네주고,
+  그 데이터 값을 바꿀 함수도 함께 줌
+  그리고 그 함수를 이용해서 데이터를 바꿨을 때,
+  데이터 값이 바뀌고 컴포넌트도 동시에 리렌더링 됨 (= 업데이트 완료) */
+
+
++) 보통 데이터에 이름을 붙일 때 `counter`처럼 원하는대로 붙이고
+   `modifier`에는 set 뒤에 이전 데이터 이름을 붙여줌
+
+  const root = document.getElementById('root');
+      function App() {
+        const [counter, setCounter] = React.useState(0);
+        const onClick = () => {
+          setCounter(counter + 1);
+        };
+        return (
+          <div>
+            <h3>Total clicks: {counter}</h3>
+            <button onClick={onClick}>Click me</button>
+          </div>
+        );
+      }
+      ReactDOM.render(<App />, root);
+
+
+∴ 변수를 컴포넌트에 연결해서 - 변수에 데이터를 담은 다음 - 해당 변수에 담긴 값을 바꾸는 것
