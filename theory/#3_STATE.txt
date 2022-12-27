@@ -308,3 +308,130 @@ ex 2) 이전 값을 이용해서 현재 값을 계산하는 것
 +) `setCounter`에는 함수를 넣을 수 있음
   첫 번째 argument는 현재 값이고, 이 함수의 `return`값이 새로운 `state`가 되는 것
   이제 이 함수가 무엇을 `return`하던지 그게 새로운 `state`가 됨
+
+
+#3.5 Inputs and State
+
+만들 것
+- unit conversion(단위 변환) 앱
+  - 분에서 시간으로, 시간에서 분으로
+  - 킬로미터에서 마일로, 킬로그램에서 파운드로
+
+
+초기 세팅 코드
+
+  function App() {
+        return (
+          <div>
+            <h1>Super Converter</h1>
+          </div>
+        );
+      }
+      const root = document.getElementById('root');
+      ReactDOM.render(<App />, root);
+
+
+먼저 분을 시간 단위로 바꾸는 것부터
+
+  function App() {
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <label for='minutes'>Minutes</label>
+            <input id='minutes' placeholder='Minutes' type='number' />
+            <label for='hours'>Hours</label>
+            <input id='hours' placeholder='Hours' type='number' />
+          </div>
+        );
+      }
+
+
+*문제
+위 문법은 React JS와 맞지 않음, JSX에서는 다르게 표현해줘야 함
+`for`은 javascript 용어라서 사용할 수 없음, `class` 또한 마찬가지
+이들을 쓰려면 `htmlFor`, `className` 로 작성해야 함
+
+
+react code로 `minutes`에 어떤 숫자를 적었는지 추적할 수 있음
+but 지금은 적힌 숫자의 `value`가 뭔지 모름
+
+React JS세계에서는 위 `<input>`은 `uncontrolled`라고 알려져 있음
+고로 `<input>`의 `value`를 통제할 수 없다는 뜻
+
+
+그래서 `minutes`에 필요한 `state` 만들기
+
+  function App() {
+        const [minutes, setMinutes] = React.useState();
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <label for='minutes'>Minutes</label>
+            <input
+              value={minutes}
+              id='minutes'
+              placeholder='Minutes'
+              type='number'
+            />
+            <label for='hours'>Hours</label>
+            <input id='hours' placeholder='Hours' type='number' />
+          </div>
+        );
+      }
+
+이제 `value`를 `<input>`에게 줄 수 있음
+
+
+사용자가 `<input>`에 새로운 값을 입력할 때마다 이 `value`(=`state`) 업데이트 시키기
+
+  function App() {
+        const [minutes, setMinutes] = React.useState();
+        const onChange = () => {
+          console.log('somebody wrote');
+        };
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <label for='minutes'>Minutes</label>
+            <input
+              value={minutes}
+              id='minutes'
+              placeholder='Minutes'
+              type='number'
+              onChange={onChange}
+            />
+            <label for='hours'>Hours</label>
+            <input id='hours' placeholder='Hours' type='number' />
+          </div>
+        );
+      }
+
+
+`<input>`의 입력값을 알고 싶음
+
+  function App() {
+        const [minutes, setMinutes] = React.useState();
+        const onChange = (event) => {
+          setMinutes(event.target.value);
+        };
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <label for='minutes'>Minutes</label>
+            <input
+              value={minutes}
+              id='minutes'
+              placeholder='Minutes'
+              type='number'
+              onChange={onChange}
+            />
+            <h4>You want to convert{minutes}</h4>
+            <label for='hours'>Hours</label>
+            <input id='hours' placeholder='Hours' type='number' />
+          </div>
+        );
+      }
+      const root = document.getElementById('root');
+      ReactDOM.render(<App />, root);
+
+⇒ 우리가 입력한 `<input>`의 `value`를 바탕으로 component를 업데이트해주고 있음
