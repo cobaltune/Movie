@@ -435,3 +435,30 @@ React JS세계에서는 위 `<input>`은 `uncontrolled`라고 알려져 있음
       ReactDOM.render(<App />, root);
 
 ⇒ 우리가 입력한 `<input>`의 `value`를 바탕으로 component를 업데이트해주고 있음
+
+
+#3.6 State Practice part One
+
+분을 시 단위로 고쳐주는 공식 (/ 60)
+
+  // ex 1)
+  value={minutes / 60};
+
+  // ex 2)
+  value={Math.round(minutes / 60)};
+
+`Math.round()`
+: 소수점 반올림해 줌
+
+
+reset `<button>` 생성
+
+  <button onClick={reset}>Reset</button>;
+
+  const reset = () => setMinutes(0);
+
+⇒ `state`를 리스닝 하거나, 연결한 모든 것들은 전부 0으로 돌림
+  이제 `hours`도 `minutes`단위로 변환해 주고 싶음 (=`flip`, 뒤집어 주는)
+
+  // hours <input>에 disabled 속성 추가
+  disabled
