@@ -462,3 +462,101 @@ reset `<button>` 생성
 
   // hours <input>에 disabled 속성 추가
   disabled
+
+
+#3.7 State Practice part Two
+
+만들 것
+
+- 단위 변환을 뒤집어보는 함수(`flip function`)
+  - 클릭하면 `Hours`를 `enabled`(입력 가능)하게 해주고
+  - 반대로 `Minutes`는 `disabled`(불가능)하게
+  - 다시 한번 클릭하면 `Hours`를 `disabled`해주고, `Minutes`를 `enabled`
+
+새로운 `state` 조작
+
+  <button onClick={onFlip}>Flip</button>
+
+  const [flipped, setFlipped] = React.useState(false);
+
+
+  // ex 1)
+  const onFlip = () => setFlipped(!flipped);
+
+  // ex 2) 이 방법을 더 선호
+  // 현재 state값을 넣어주고 결과는 그 반대로 도출하라고 명령
+  const onFlip = () => setFlipped((current) = !current);
+
+
+만약 `onFlip`효과를 가진 버튼을 누르면 위 `flipeed` 값을 반전 시킴
+
+  - `flipped`이 `true`상태라면 `false`를 반환
+  - `flipped`이 `false`상태라면 `true`를 반환
+
+  ⇒ 현재 `state`를 바탕으로 새로운 `state`를 계산
+
+
+  disabled={flipped === false}
+  // disabled={!flipped}
+
+  // minutes의 <input> 속성 줄 코드 추가
+  disabled={flipped === true}
+  // disabled={flipped}
+
+  /* 코드 해석
+  flipped는 단순히 true 혹은 false인 변수,
+  flip 버튼을 누르면 onFlip 함수가 실행되는데
+  onFlip 함수는 현재 값을 받아서 그 반대의 값을 내놓음
+
+
+  만약 현재 값이 true면 결과로 false를 내놓을 거고
+  현재 값이 false면 true를 반환 */
+
+
+`flipped`의 default 값이 `false`니까,
+`flipped`가 `false`면 `hours`는 `disabled`이고
+= `flipped`가 `false`면 `true`가 되어야 한다는 뜻
+
+`hours <input>`의 `change` event를 리스닝 해보자
+: `flip`하고 `enabled`된 `hours`에 뭔가를 쓰려고 하면 안 써짐
+
+  onChange={onChange};
+
+
+입력한 값 그대로의 `value`를 보여주고 싶으면
+(물론 `minutes <input>`에는 단위 변환된 값으로 보여주고)
+
+  // hours <input>
+  value={flipped ? minutes: Math.round(minutes / 60)};
+
+  /* 코드 해석
+  만약 현재 flipped가 (true)라면 현재 값만 보여줘
+  = 단위 변환은 보여주지마 */
+
+  /* 코드 해석 2
+  만약 flipped 상태가 아니라면 (false) 변환된 값을 보여줘 */
+
+
+모든 `minutes`의 이름을 `amount`로 수정 후 진행
+
+
+시를 분으로 바꾸는 공식 (* 60)
+
+  // amount <input>
+  value={flipped ? amount * 60 : amount}
+
+  /* 코드 해석
+  만약 현재 flipped 상태가 아니라면 (false) amount를 보여줘 */
+
++) 같은 장소에서 두 가지 `state`를 조합해서 쓰고 있음 → 다음 강의에서 복습
+
+
+*문제
+`flip`을 할 때마다 변환된 값이 바뀜
+
+그래서 `onFlip`함수에다가 `setFlipped` 말고도 `reset` 함수도 실행
+
+  const onFlip = () => {
+  reset();
+  setFlipped((current) => !current);
+  };
