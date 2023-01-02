@@ -583,3 +583,189 @@ reset `<button>` 생성
 
 ∴ `state`를 세팅하는 좋은 연습이자,
 `state`를 바탕으로 UI를 변경할 수 있다는 게 얼마나 유용한지 알 수 있음
+
+
+#3.9 Final Practice and Recap
+
+만들 것
+- 일종의 메뉴바
+
+두 개의 단위 변환기를 만들어줄 거임 (사용자가 원하는 단위 변환기를 선택할 수 있게)
+- 분(minutes) / 시간(hours) 변환기
+- 마일(miles) / 킬로미터(km) 변환기
+
+
+코드 복붙, 이름 수정, 제목 삭제
+
+  function MinutesToHours() {
+        const [amount, setAmount] = React.useState();
+        const [inverted, setInverted] = React.useState(false);
+        const onChange = (event) => {
+          setAmount(event.target.value);
+        };
+        const reset = () => setAmount(0);
+        const onFlip = () => {
+          reset();
+          setInverted((current) => !current);
+        };
+        return (
+          <div>
+            <div>
+              <label for='amount'>Amount</label>
+              <input
+                value={inverted ? amount * 60 : amount}
+                id='amount'
+                placeholder='Amount'
+                type='number'
+                onChange={onChange}
+                disabled={inverted === true}
+                // disabled={inverted}
+              />
+            </div>
+            <div>
+              <label for='hours'>Hours</label>
+              <input
+                value={inverted ? amount : Math.round(amount / 60)}
+                id='hours'
+                placeholder='Hours'
+                type='number'
+                disabled={inverted === false}
+                // disabled={!inverted}
+                onChange={onChange}
+              />
+            </div>
+            <button onClick={reset}>Reset</button>
+            <button onClick={onFlip}>Flip</button>
+          </div>
+        );
+      }
+
+  function App() {
+        return (
+          <div>
+            <h1>Super Converter</h1>
+          </div>
+        );
+      }
+      const root = document.getElementById('root');
+      ReactDOM.render(<App />, root);
+
+: 코드를 복붙 및 수정한 이유는  `App`이 시/분 변환에 신경 껐으면 해서,
+  이제 `App`은 우리가 만들 여러 변환기들을 고를 수 있게 함
+
+
+컴포넌트는 그 안에 또 다른 컴포넌트를 렌더링 할 수 있음
+
+  function App() {
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <MinutesToHours />
+          </div>
+        );
+      }
+      const root = document.getElementById('root');
+      ReactDOM.render(<App />, root);
+
+  /* 코드 해석
+  분할 정복(divide and conquer)을 함으로써 App 함수는
+  <div>, <h1>, <MinutesToHours>에 있는 모든 요소를 그려줌 */
+
+
+또 다른 컴포넌트를 만들어서
+
+  function KmToMiles() {
+        return <h3>Km to Miles</h3>;
+      }
+
+
+`App` 컴포넌트 안에 스위치를 만들고 싶음
+: `App`이 시/분 변환기에서 km/miles 변환기로 전환할 수 있게 하고 싶어서
+
+  function App() {
+        const [index, setIndex] = React.useState(0);
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <MinutesToHours />
+            <KmToMiles />
+          </div>
+        );
+      }
+
+
+위와 같이 두 개의 컴포넌트를 렌더링 하지 않고 `select` 함수를 만들고 싶음
+
+지금 세 개의 컴포넌트가 있는데
+
+  - `function MinutesToHours() {`
+  - `function KmToMiles() {`
+  - `function App() {`
+      - `root div`를 그려주는 역할 (가장 중요한 컴포넌트)
+      - 이 컴포넌트는 다른 2개의 컴포넌트를 렌더링하고 있음
+
+
+`App` 컴포넌트가 `state`를 가지도록 해서 어떤 변환기를 보고 싶은지 체크
+
+  function App() {
+        const [index, setIndex] = React.useState(0);
+        const onSelect = (event) => {
+          console.log(event.target.value);
+        };
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <select onChange={onSelect}>
+              <option value='0'>Minutes & Hours</option>
+              <option value='1'>Km & Miles</option>
+            </select>
+          </div>
+        );
+      }
+
+  /* 코드 해석
+  select의 change event를 리스닝 - 사용자가 번호를 선택하면
+  setIndex를 이용해서 그 숫자를 state안에 넣음 */
+
+`<select>`
+: React에 속한 애가 아니고 just html 코드, `<select>`는 안에 `<option>`들을 가지고 있음
+
+
+이제 이 데이터들을 state안에 넣고,
+혹시 나중에 수정할 경우를 대비해서 `<select>`에도 `<value>` 넣어줌
+
+  function App() {
+        const [index, setIndex] = React.useState(0);
+        const onSelect = (event) => {
+          setIndex(event.target.value);
+        };
+        return (
+          <div>
+            <h1>Super Converter</h1>
+            <select value={index} onChange={onSelect}>
+              <option value='0'>Minutes & Hours</option>
+              <option value='1'>Km & Miles</option>
+            </select>
+          </div>
+        );
+      }
+  
+
+이제 어떤 걸 보여줄지 고를 차례
+⇒ 컴포넌트 안에 JSX를 사용해서 작은 `if else` 두 개를 만들어보자
+
+  {index === '0' ? <MinutesToHours /> : null}
+  {index === '1' ? <KmToMiles /> : null}
+
+  /* 코드 해석
+  만약 index가 "0"과 같다면 MinutesToHours을 렌더링,
+  그게 아니라면 아무것도 렌더링 x
+
+  만약 index가 "1"과 같다면 KmToMiles를 렌더링,
+  그게 아니라면 아무것도 렌더링 x */
+
++) `{}`를 안 쓰면 text로 인식되고, `{}`를 쓰면 이 안에 JS를 쓸 수 있음
+
+이런 걸 앞으로 엄청 자주 하게 될 텐데 이건 `index`의 변화를 리스닝 해주고 있는 것뿐
+⇒ `<input>`이 있고, 그 안의 값이 바뀌는 것들
+  그리고 변화가 일어나면, `state`가 업데이트 (= 컴포넌트가 보이는 것처럼 변한다는 말)
