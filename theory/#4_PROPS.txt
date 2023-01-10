@@ -274,3 +274,61 @@ React 기능 중 하나로, memorize(기억)하는 것처럼
 추후에 어플리케이션이 느려지는 원인이 될 수도 있음
 
 ∴ 우리의 컴포넌트들이 다시 그려질 때 우리가 컨트롤할 수 있다는 것을 보여주는 강의
+
+
+#4.2 Prop Types
+
+*문제
+컴포넌트들을 갖고 있는데 매우 많은 props를 갖고 있을 때
+  - 잘못된 props를 전달한다든가
+
+Btn에 한 가지 더 configuration(설정)을 한다면,
+유저가 prop으로 fontsize를 전달할 수 있도록
+
+`propType`
+: 어떤 타입의 prop을 받고 있는지 체크해줌
+
+`.isRequired`
+: 이 컴포넌트(`Btn`)가 두 prop(`text`, `fontSize`)을 갖고 렌더링 되는 것에 확실히 하고 싶을 때
+
+  Btn.propTypes = {
+        text: PropTypes.string.isRequired,
+        fontSize: PropTypes.number.isRequired,
+      };
+
+
+정의되지 않은 변수에 관한 기본값을 설정해줄 수 있음
+
+  function Btn({ text, fontSize = 16 }) {
+        return (
+          <button
+            style={{
+              backgroundColor: 'tomato',
+              color: 'white',
+              padding: '10px 20px',
+              border: 0,
+              borderRadius: 10,
+              fontSize: fontSize,
+            }}
+          >
+            {text}
+          </button>
+        );
+      }
+
+      Btn.propTypes = {
+        text: PropTypes.string.isRequired,
+        fontSize: PropTypes.number,
+      };
+
+      function App() {
+        return (
+          <div>
+            <Btn text='Save Changes' fontSize={18} />
+            <Btn text={'Continue'} />
+          </div>
+        );
+      }
+
+두 번째 `Btn`에만 발생
+: `fontSize`가 (prop으로서) 설정되지 않았기 때문
