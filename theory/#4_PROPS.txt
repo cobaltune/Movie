@@ -332,3 +332,10 @@ Btn에 한 가지 더 configuration(설정)을 한다면,
 
 두 번째 `Btn`에만 발생
 : `fontSize`가 (prop으로서) 설정되지 않았기 때문
+
+
+#4.3 Recap
+
+`.isRequired`
++) 최소한 콘솔창에서 경고문이라도 받아내기 위해서 하는 놈
+  error는 아니고 warning (코드의 실행을 막지는 않음)
