@@ -93,3 +93,35 @@ react 콘솔창에서 <script>부분
    즉, 차후에 버튼과 같은 다른 컴포넌트도 한 개의 파일로 이루어질 거라는 걸 의미
 
 ∴ 이제 어플리케이션을 만들고 npm start를 실행 = 브라우저에 리액트 실행
+
+
+#5.1 Tour of CRA
+
+해볼 것
+
+- 컴포넌트 만들고
+- props 넣고
+- propTypes 확인해 보고
+
+
+react 안 켜질 때 (terminal)
+
+  cd movie/horror
+  npm start
+
+
+global(전역적인) CSS style을 원하지 않는다면 styles.css 대신에
+style prop으로 사용하지만 이렇게 style을 직접적으로 넣고 싶지 않다면
+create-react-app에서는 분할하고 정복을 주로 CSS modules을 사용
+ㄴ CSS코드를 javascript 오브젝트로 변환시켜 줌
+
+  // 파일 생성
+  xxx.mudule.css
+
+
+create-react-app은 무작위적인 랜덤 class를 가짐으로써
+동일한 class name인 btn을 다른 파일 내에서도 사용할 수 있음
++) 매번 다른 클래스 이름을 사용하기 위해 기억하는 것보다 나음
+
+이제 컴포넌트 분리해서 만들 수 있고, 그 컴포넌트를 위한 CSS를 만들 수 있음
+= 컴포넌트나 스타일을 독립적이게 유지시켜줌
