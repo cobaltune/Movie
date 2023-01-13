@@ -217,3 +217,148 @@ UI의 관점에서는 새로운 데이터가 들어올 때마다 자동으로 �
 3. 둘 중 하나가 실행되면 코드가 실행되도록
 
 ∴ 결국 코드를 언제 실행할지 선택하는 건 `useEffect`라는 것
+
+
+#6.4 Cleanup
+
+배울 것
+- `Cleanup function` (그렇게 많이 쓰는 건 아님)
+
+  function Hello() {
+    return <h1>Hello</h1>;
+  }
+
+  function App() {
+    const [showing, setShowing] = useState(false);
+    const onClick = () => setShowing((prev) => !prev);
+    return (
+      <div>
+        {showing ? <Hello /> : null} // javascript를 쓸 때에는 {} 꼭 중괄호
+        <button onClick={onClick}>{showing ? 'Hide' : 'Show'}</button>
+      </div>
+    );
+  }
+
+  /* 코드 해석
+  만약 showing이 true라면 <hello> component를 render */
+
++) component는 단지 jsx를 `return`하는 `function`
+  jsx는 <html>은 아니지만 react에서 <html>과 흡사하게 쓸 수 있도록 한 구문
+
+
+component를 없애버리거나(destroy), 생성(create)하고 있음
+
+  function Hello() {
+    useEffect(() => {
+      console.log("I'm here!");
+    });
+    return <h1>Hello</h1>;
+  }
+
+  function App() {
+    const [showing, setShowing] = useState(false);
+    const onClick = () => setShowing((prev) => !prev);
+    return (
+      <div>
+        {showing ? <Hello /> : null}
+        <button onClick={onClick}>{showing ? 'Hide' : 'Show'}</button>
+      </div>
+    );
+  }
+
+
+`hide button`을 누를 때 component가 완전히 destroy되는 것을 확인할 수 있음
+
+  function Hello() {
+    useEffect(() => {
+      console.log('created');
+      return () => console.log('destroyd');
+    });
+    return <h1>Hello</h1>;
+  }
+
+
+react.js에서는 component가 destroy될 때 `function`을 실행할 수 있는데, 실행하고 싶으면
+`effectFn`이 새로운 `function`을 `return`해야 함
+
+위 코드를 다듬은 .ver
+
+  function Hello() {
+    function byFn() {
+      console.log('bye');
+    }
+
+    function hiFn() {
+      console.log('created');
+      return byFn;
+    }
+    useEffect(hiFn, []);
+    return <h1>Hello</h1>;
+  }
+
+  /* 코드 해석
+  component(function hello)가 실행될 때, hiFn이 실행될 거고
+  근데 이 component가 언제 파괴될지도 알고 싶으면 hiFn이 byFn을 return해야 함
+  useEffect는 function을 받고, 이 function은 dependency가 변화할 때 호출됨
+  우리의 경우에는 component가 처음 생성될 때 function이 호출된 후, 다시는 호출되지 않음 */
+
+
+`useEffect`의 유용한 점
+
+- 언제 코드를 실행할지 우리에게 선택권을 제공함
+    - 우리는 시작할 때만 코드를 실행하게 할 수 있고
+    - 무언가가 변화할 때 코드가 실행되도록 할 수도 있고
+    - component가 파괴될 때 코드를 실행할 수도 있음
+    
+
+니콜라스 왈 : 이게 그렇게 자주 일어날 일은 아니지만 가끔은 해야 할 필요가 있을 수도 있음
+react앱을 만들 때 이 `byFn`이 주로 필요하지는 않음, cleanup function을 사용하지 않음
+
+
+이전에 했던 걸로 한번 돌아가 볼 건데, 조금 다른 방식으로 `function Hello()`안 `function` 부분을 작성해 볼 거임
+→ 그게 많은 react.js 프로젝트에서 보게 될 구조가 될 테니까
+
+사람들은 주로 이런 `function`들을 만들지 않고, 보통은 `useEffect`안에 모든 것을 작성함
+`mount` 또는 `render`할 때 `console.log` hi를 찍어줄거임
+
+  // Way 1)
+  //useEffect(() => {}, []);
+
+  useEffect(() => {
+      console.log('hi');
+      return () => console.log('bye');
+    }, []);
+
+
+  // Way 2)  이건 잘 안씀
+  /* useEffect(function () {
+      
+    }, []); */
+
+  useEffect(function () {
+      console.log('hi');
+      return function () {
+        console.log('bye');
+      }
+    }, []);
+
+여기서 한 것은 `function`을 `return`을 한 것뿐임
+
+
++) react `mount`, `render`란
+
+- 마운트 (mount) : DOM 객체가 생성되고 브라우저에 나타나는 것을 의미
+- 렌더 (render) : 컴포넌트의 기능과 모양새를 정의하는 함수로 리액트 요소를 반환
+
+참고 사이트
+[https://lktprogrammer.tistory.com/130](https://lktprogrammer.tistory.com/130)
+
+
+- 컴포넌트가 `mount`되는 것과 `render`가 되는 것은 다름.
+  맨 처음 컴포넌트가 `render`될 때는 component가 `mount`되지만, 다시 `props`나 `state`가 변경되어 `render`될 때는 `mount`가 되지 않음
+  
+- react의 `state`나 `props` 변화가 있을 때는 렌더 될 때 컴포넌트가 다시 `mount`되는 게 아니므로,
+  *shouldComponentUpdate(nextProps, nextState) 나, componentWillRecieveProps(nextProps)* 쪽에서 그 변화를 감지해 관련 작업을 해줘야 함
+
+참고 사이트
+[https://ideveloper2.tistory.com/97](https://ideveloper2.tistory.com/97)
