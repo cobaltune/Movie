@@ -3,11 +3,9 @@ import styles from './App.module.css';
 import { useState, useEffect } from 'react';
 
 function Hello() {
-  useEffect(function () {
+  useEffect(() => {
     console.log('hi');
-    return function () {
-      console.log('bye');
-    };
+    return () => console.log('bye');
   }, []);
   return <h1>Hello</h1>;
 }
