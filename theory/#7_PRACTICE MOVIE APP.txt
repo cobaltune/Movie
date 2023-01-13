@@ -1,0 +1,68 @@
+
+#7.0 To Do List part One
+
+만들 것
+- `state` / `effect` / `props`를 통한 아주 매우 엄청 간단한 to-do list
+
+  function App() {
+    const [toDo, setToDo] = useState('');
+    const [toDos, setToDos] = useState([]);
+    const onChange = (event) => setToDo(event.target.value);
+    const onSubmit = (event) => {
+      event.preventDefault();
+      if (toDo === '') {
+        return;
+      }
+      setToDo('');
+    };
+    console.log(toDos);
+    return (
+      <div>
+        <form onSubmit={onSubmit}>
+          <input
+            onChange={onChange}
+            value={toDo}
+            type='text'
+            placeholder='Write your to do...'
+          />
+          <button>Add To Do</button>
+        </form>
+      </div>
+    );
+  }
+
+*javascript였다면 `toDos.push()`였겠지만 react에서는 `state`를 직접적으로 수정할 수 없다는 걸 기억해야 함
+
+
+만약 네가 `toDos array`를 수정하고 싶다면, 수정하는 함수를 사용해야 함
+⇒ `array`를 직접적으로 수정하지 않으면서 `setToDos`로 `array`에 element를 추가하는 방법
+
+1. 값을 직접적으로 수정
+2. `setTodos()`에 함수를 넣는 방법
+    a. 이 함수는 첫 번째 argument로 현재의 `state`를 받아와야 함
+    b. 그리고 새로운 `array`를 받아와야 함 (단, 이 `state`는 항상 새로운 거여야 함)
+
+
+  const food = [1, 2, 3, 4]
+
+  [6, food]
+  // 출력값
+  (2) [6, Array (4)]
+  /* 6와 array를 갖게 됨 = array와 그 안에 또 다른 array */
+
+
+  [6, ...food]
+  // 출력값
+  (2) [6, 1, 2, 3, 4]
+  /* ...이 element를 돌려줌 */
+
+
+위는 아래와 같은 구조
+
+  setToDos(([]) => [toDo, ...[]]]);
+  setToDos(([]) => [toDo]]);
+
+
+react.js는 제목에 즉각적인 상호작용을 넣을 수 있음
+
+  <h1>My To Dos ({toDos.length})</h1>
