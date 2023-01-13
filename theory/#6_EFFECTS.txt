@@ -45,3 +45,115 @@ ex ) API를 통해 데이터를 가져올 때
   export default App;
 
 
+#6.2 Deps
+
+저번에 했던 state와 input (search bar)의 콤비네이션
+
+  import { useState, useEffect } from 'react';
+
+  function App() {
+    const [counter, setValue] = useState(0);
+    const [keyword, setKeyword] = useState('');
+    const onClick = () => setValue((prev) => prev + 1);
+    const onChange = (event) => setKeyword(event.target.value);
+    console.log('i run all the time');
+    useEffect(() => {
+      console.log('CALL THE API ...');
+    }, []);
+      console.log('SEARCH FOR', keyword);
+    return (
+      <div>
+        <input
+          value={keyword}
+          onChange={onChange}
+          type='text'
+          placeholder='Search here'
+        />
+        <h1>{counter}</h1>
+        <button onClick={onClick}>click me</button>
+      </div>
+    );
+  }
+
+  export default App;
+
+  /* 코드 해석
+  input을 만들고 event listener를 연결하고, 이 function이 작동할 때 argument로 event를 받음
+  그리고 event를 발생시킨 input에서 value를 받아서 그 value를 'keyword' state에 넣음
+  그리고 그 keyword를 가져와서 input의 value로 사용하면
+  우리가 원할 때 input을 조작할 수 있음 */
+
+
+*문제
+계속 버튼을 클릭했더니 ‘marvel’이 계속 검색됨, 우리는 search keyword에 변화가 있을 때만 ‘maevel’영화를 검색하고 싶음
+(+ counter가 변화할 때에도 ‘marvel’영화를 검색하고 싶지 않음)
+: state를 변화시킬 때마다 8, 12라인이 모두 다 실행되기 때문
+
+
+배울 것
+- 코드의 특정한 부분이 변화했을 때, 원하는 코드를 실행할 수 있는 방법
+  (= `movie state`가 변화할 때만 user가 원하는 영화를 검색하고 싶음)
+
+  function App() {
+    const [counter, setValue] = useState(0);
+    const [keyword, setKeyword] = useState('');
+    const onClick = () => setValue((prev) => prev + 1);
+    const onChange = (event) => setKeyword(event.target.value);
+    console.log('i run all the time');
+    useEffect(() => {
+      console.log('CALL THE API ...');
+    }, []);
+    useEffect(() => {
+      console.log('SEARCH FOR', keyword);
+    }, [keyword]); // 여기가 바로 마법이 일어나는 지점
+    console.log('SEARCH FOR', keyword);
+    return (
+      <div>
+        <input
+          value={keyword}
+          onChange={onChange}
+          type='text'
+          placeholder='Search here'
+        />
+        <h1>{counter}</h1>
+        <button onClick={onClick}>click me</button>
+      </div>
+    );
+  }
+
++) keyword가 변화할 때 코드를 실행할거라고 react.js에게 알려주는 것
+
+  useEffect(() => {
+    console.log('SEARCH FOR', keyword);
+  }, [/*x가 변화할 때 코드를 실행하고 싶은 x의 자리*/]);
+
+그리하여 `counter`가 변화할 때에 두 번째 `useEffect`는 실행되지 않음, 위 코드는 `keyword`가 변화할 때만 실행됨
+⇒ 이게 바로 우리가 빈 array를 써 주었을 때 코드가 단 한 번만 실행되는 이유, 왜냐하면 react.js가 아무것도 지켜보지 않으니까
+
+
+*문제
+아직 검색창이 완벽하게 동작한다고 할 수 없는데
+: component가 시작될 때도 검색이 되고 있기 때문
+
+  useEffect(() => {
+      if (keyword !== '' && keyword.length > 5) {
+        console.log('SEARCH FOR', keyword);
+      }
+    }, [keyword]);
+
+  /* 코드 해석
+  keyword가 빈 값이 아니라면, 그때 keyword를 검색에 조건을 덧붙여
+  keyword의 길이가 5 이상부터 검색 */
+
+
+언제 코드가 실행될지 결정하는 방법
+
+- component가 생성되는 첫 시작점
+- 무언가가 update될 때
+- 특정한 keyword가 update될 때만
+
+
+(원한다면 `keyword`, `counter`) 두 개를 합칠수도
+
+  console.log('I run when keyword & counter change');
+    }, [keyword, counter]);
