@@ -66,3 +66,158 @@
 react.js는 제목에 즉각적인 상호작용을 넣을 수 있음
 
   <h1>My To Dos ({toDos.length})</h1>
+
+
+#7.1 To Do List part Two
+
+수정하는 함수를 사용할 때 두 가지 옵션이 있다는 것을 꼭 기억해야 함
+
+1. `setToDo("");` : 단순히 값만 보내는 방식
+  a. 값을 보낼 때 이런 식으로 보낼 수 있음. 이 값은 우리가 저장한 data를 갖고 있음
+  b. 만일 `setToDo`가 비어있는 string 값으로 불렸다면, 그건 `toDo`가 비어있는 string값이 될 거라는 것
+
+2. `setToDos((currentAraay) ⇒ [toDo, …currentArray]);` : 함수를 보내는 방식
+  a. 함수를 보낼 때 react.js는 함수의 첫 번째 argument로 현재 `state`를 보냄
+     그러면 현재 `state`를 계산하거나, 새로운 `state`를 만드는데 사용할 수 있게 됨
+  b. 현재 `toDos`를 받아와서 새로운 `toDo`의 `array`로 `return`하는 것
+  c. 현재 `state`(=`toDo, …currentArray`)에 들어있는 모든 요소들을 더해서 새로운 `state`를 계산할 수 있음
+
+
+배울 것
+
+- `array`로부터 동일한 component에 있는 많은 것들을 `render`할 수 있는 방법
+    = `array`를 가진 각각의 element를 각각의 component로 만들고 싶음
+    
+
+`map()` (= 예전 `array`를 가져와서 변형시킴)
+: javascript 함수로 첫 번째 argument는 `value`여야하고 (=이건 각각의 `toDo`를 의미), 두 번째 argument는 `index`(number)
+
+  - `array`를 가진 각각의 element를 다 바꾸고 싶고
+  - 다 바뀐 새로운 `array`를 가지고 싶을 때
+
+`map`은 `()`이 안에 함수를 넣을 수 있도록 해주는데, 이 함수는 `array`의 모든 `item`에 대해 실행됨
+그리고 여기에서 무엇을 `return`하든지 간에 그 `return`한 값이 새로운 `array`에 들어가 있게 됨
+
+  ['there', 'are', 'you', 'are', 'how', 'hello'].map(() => ":)")
+
+  // 출력값
+  (6) [':)', ':)', ':)', ':)', ':)', ':)',]
+  0: ':)'
+  1: ':)'
+  2: ':)'
+  3: ':)'
+  4: ':)'
+  5: ':)'
+  length: 6
+
+*문제
+쓸모가 없음, 보다시피 기존의 `item`으로 접근할 수 없게 됨
+
+좋은 소식은 `map`은 함수의 첫 번째 argument로 현재의 `item`을 가져올 수 있다는 것
+
+  ['there', 'are', 'you', 'are', 'how', 'hello'].map((item) => item.toUpperCase())
+
+  // 출력값
+  (6) ['THERE', 'ARE', 'YOU', 'ARE', 'HOW', 'HELLO']
+  // item이 모두 대문자가 되어 있는 새로운 array를 return한 것을 확인할 수 있음
+
+`()`에 원하는 어떠한 변수명을 넣고, 그 말은 `item` 자체를 `return`할 수도 있다는 것
+*포인트는 `map`의 함수의 첫 번째 argument가 진행되고 있는 순서에 맞는 `item`이라는 것
+
+
+  function App() {
+    const [toDo, setToDo] = useState('');
+    const [toDos, setToDos] = useState([]);
+    const onChange = (event) => setToDo(event.target.value);
+    const onSubmit = (event) => {
+      event.preventDefault();
+      if (toDo === '') {
+        return;
+      }
+      setToDos((currentArray) => [toDo, ...currentArray]);
+      setToDo('');
+    };
+    console.log(toDos);
+    return (
+      <div>
+        <h1>My To Dos ({toDos.length})</h1>
+        <form onSubmit={onSubmit}>
+          <input
+            onChange={onChange}
+            value={toDo}
+            type='text'
+            placeholder='Write your to do...'
+          />
+          <button>Add To Do</button>
+        </form>
+        <hr />
+        <ul>
+          {toDos.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+모든게 다 새로고침 되었기 때문에 이것들이 동작할때마다 새로운 버전의 `toDos`를 기준으로 동작하게 됨
+
+
+*문제
+같은 component의 `list`를 `render`할 때 `key`라는 `prop`을 넣어줘야 함
+: react가 기본적으로 `list`에 있는 모든 `item`들을 인식하기 때문
+*`key`는 고유의 값(unique)이어야 함
+
+  function App() {
+    const [toDo, setToDo] = useState('');
+    const [toDos, setToDos] = useState([]);
+    const onChange = (event) => setToDo(event.target.value);
+    const onSubmit = (event) => {
+      event.preventDefault();
+      if (toDo === '') {
+        return;
+      }
+      setToDos((currentArray) => [toDo, ...currentArray]);
+      setToDo('');
+    };
+    console.log(toDos);
+    return (
+      <div>
+        <h1>My To Dos ({toDos.length})</h1>
+        <form onSubmit={onSubmit}>
+          <input
+            onChange={onChange}
+            value={toDo}
+            type='text'
+            placeholder='Write your to do...'
+          />
+          <button>Add To Do</button>
+        </form>
+        <hr />
+        <ul>
+          {toDos.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+
+∴ `array`(단순 string으로 구성된 `array`)를 가져와서 그 `array`의 `item`들을 변형해서 `li`가 되도록 함
+
+⇒ 여러 li로 구성된 하나의 array (아래와 같음)
+
+  <ul>
+    {[<li key={0}>{item}</li>, <li key={1}>{item}</li>, <li key={2}>{item}</li>... ]}
+  </ul>
+
+
+∴ 매우 적은 `state`로 component를 refresh할 새로운 `array`를 만들고, `toDos`에 있는 각각의 `item`으로 `li`를 만듦
+⇒ 이와 같이 react element로서의 array를 얻을 수 있음
+
+  // 콘솔창에서
+  (4) ['you', 'are', 'how', 'hello'] // string으로 된 toDos
+
+  (4) [{...}, {...}, {...}, {...}] // react element로서의 array
+  // li> props> children: "you"
