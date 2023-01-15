@@ -562,6 +562,7 @@ movie API를 보면 `genres array`에 있는 각각이 `genres`에 대해서 `ma
               <div key={movie.id}>
                 <img src={movie.medium_cover_image}></img>
                 <h2>{movie.title}</h2>
+                <h3>({movie.year})</h3>
                 <p>{movie.summary}</p>
                 <ul>
                   {movie.genres.map((g) => (
