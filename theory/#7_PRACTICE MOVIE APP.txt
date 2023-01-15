@@ -599,3 +599,145 @@ ID를 얻을건데, 다음 영상에서 링크를 만들거라서 필요함
 이 URL은 모든 영화를 나열하고 있으며, 이 ID를 가진 영화에 대한 디테일을 보여주고 있음
 
 ⇒ 어떻게 페이지를 전환할 수 있는지 알려주고 싶대
+
+
+#7.4 Movie App part Two
+
+페이지를 전환하는 방법을 배우기 전에 react.js의 장점인 component를 활용해서 코드 정리
+⇒ `moive`에서 정보들을 가져오고 있는데, 지금은 `prop`으로써 우리의 component로 넘겨서
+   component들이 이것들을 받아서 사용하게 하고 있음
+
++) 모든 이미지 element들은 `alt`속성을 가지기 때문에 그냥 `alt`를 갖는 게 더 좋음
+   여전히 `Movie`에 `Key={movie.id}`값을 넣어줘야 함
+*`key`는 react.js에서만, `map`안에서 component들을 `render`할 때 사용
+
+
+  // App.js
+
+  import Button from './Button';
+  import styles from './App.module.css';
+  import { useState, useEffect } from 'react';
+  import Movie from './Movie';
+
+  function App() {
+    const [loading, setLoading] = useState(true);
+    const [movies, setMovies] = useState([]);
+    const getMovies = async () => {
+      const json = await (
+        await fetch(
+          `https://yts.mx/api/v2/list_movies.json?minimum_rating=8.5&sort_by=year`,
+        )
+      ).json();
+      setMovies(json.data.movies);
+      setLoading(false);
+    };
+    useEffect(() => {
+      getMovies();
+    }, []);
+    return (
+      <div>
+        {loading ? (
+          <h1>Loading...</h1>
+        ) : (
+          <div>
+            {movies.map((movie) => (
+              <Movie
+                key={movie.id}
+                mediumCoverImage={movie.medium_cover_image}
+                title={movie.title}
+                year={movie.year}
+                summary={movie.summery}
+                genres={movie.genres}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  export default App;
+
+
+  // Moive.js
+
+  function Movie({ mediumCoverImage, title, year, summary, genres }) {
+    return (
+      <div>
+        <img src={mediumCoverImage} alt={title}></img>
+        <h2>{title}</h2>
+        <h3>({year})</h3>
+        <p>{summary}</p>
+        <ul>
+          {genres.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  export default Movie;
+
+⇒ `props`를 보내는 작업을 했고
+
+
+여기서 어떤 `props`를 가지고 있는지 알면 좋을 듯
+
+  import PropTypes from 'prop-types';
+
+  function Movie({ mediumCoverImage, title, year, summary, genres }) {
+    return (
+      <div>
+        <img src={mediumCoverImage} alt={title}></img>
+        <h2>{title}</h2>
+        <h3>({year})</h3>
+        <p>{summary}</p>
+        <ul>
+          {genres.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  Movie.propTypes = {
+    mediumCoverImage: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    year: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  export default Movie;
+
+
+react Router ⇒ 페이지를 전환하는 것
+
+  home - localhost:3000
+  ex) movies.movie.id가 붙은 페이지 - localhost:3000/movies/12121212
+
+
+vsc terminal
+
+  npm install react-router-dom
+
+이제 코드를 바꾸거나 이동시켜야 하는데 because 스크린 단위로 생각해야 하기 때문
+
+ex) 하나의 route는 home, 홈 스크린, 홈페이지 등등
+    스크린이나 페이지나 route나 부르고 싶은대로 불러도 되는데 router별로 생각해야 함
+
+home route를 두고 이곳에서 모든 영화를 보여줄 거고
+Movie route를 두고 그곳에서는 영화 하나만 보여줄 예정
+
+
+App.js는 더이상 영화들을 보여주지 않고 대신에 App.js는 router를 `render`함
+
+router는 URL을 보고 있는 component고,
+URL에 따라서 router는
+
+- [localhost:3000](http://localhost:3000) → Home component를 보여줌
+- [localhost:3000/movies/123](http://localhost:3000/movies/123) → Detail component를 보여줌
+
+그래서 App.js는 이제 새로운 component를 `render`하게 될 텐데 이건 다음 시간에
