@@ -217,7 +217,7 @@ react.js는 제목에 즉각적인 상호작용을 넣을 수 있음
 ⇒ 이와 같이 react element로서의 array를 얻을 수 있음
 
   // 콘솔창에서
-  (4) ['you', 'are', 'how', 'hello'] // string으로 된 toDos
+  (4) ['you', 'are', 'how', 'hello']  // string으로 된 toDos
 
-  (4) [{...}, {...}, {...}, {...}] // react element로서의 array
+  (4) [{...}, {...}, {...}, {...}]  // react element로서의 array
   // li> props> children: "you"
