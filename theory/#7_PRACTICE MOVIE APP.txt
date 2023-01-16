@@ -1106,3 +1106,143 @@ React
 - propTypes
 - 그다음에는 그냥 html이랑
 - 그걸 예쁘게 꾸미는 게 전부
+
+
+#7.7 Publishing
+
+결과물을 github pages에 deploy
+
+vsc terminal : gh-pages (tool) 설치
+
+  npm i gh-pages
+
+`gh-pages`
+: 결과물을 github pages(github에서 제공하는 무료 서비스)에 업로드할 수 있게 해주는 패키지로
+  <html>, <css>, <javascript>를 올리면 그걸 웹사이트로 만들어서 전 세계에 무료로 배포해 줌
+  (도메인도 얻을 수 있음)
+
+
+[package.json]에 scripts를 확인해 보면
+
+  "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+  
+`build`
+: 이 script를 실행하면 웹사이트의 production ready code를 생성하게 됨
+
++) production ready란 코드가 압축되고 모든 게 최적화된다는 의미
+
+
+vsc terminal
+
+  npm run build
+
+코드가 압축되고 모든 게 최적화된 후에 “build”라는 폴더가 생길 거임
+
+
+STEP.1
+
+  // package.json
+  {
+    "name": "horror",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@testing-library/jest-dom": "^5.16.5",
+      "@testing-library/react": "^13.4.0",
+      "@testing-library/user-event": "^13.5.0",
+      "global": "^4.4.0",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-router-dom": "^6.6.2",
+      "react-scripts": "^5.0.1",
+      "web-vitals": "^2.1.4"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    },
+    "homepage": "https://cobaltune.github.io/Movie"
+  }
+
+  1. ,
+  2. "homepage":
+  3. "https://
+  4. Github username
+  5. github.io
+  6. 코드가 들어있는 github repository”
+
+
+STEP.2
+
+  // package.json
+  "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "deploy": "gh-pages -d build"
+    },
+
+`deploy`
+: 방금 설치한 gh-pages를 실행시키고, “build”라는 디렉토리를 갖음
+
+
+`predeloy` command 생성
+: `build`를 먼저 한 다음, `deploy`를 해야 하는 걸 기억하고 싶지 않기 때문에
+
+  // package.json
+  "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject",
+      "deploy": "gh-pages -d build",
+      "predeploy": "npm run build"
+    },
+
+  /* 코드 해석
+  npm run deploy를 실행하면
+  > Node.js가 predeploy를 먼저 실행시키고
+  > predeploy는 npm run build를 실행시킴
+  > npm run build는 react-scripts build를 실행시키고
+  > 그럼 이게 최적화된 것들을 만들어내고
+  > 끝이 나면 gh-pages -d build가 실행됨
+
+  gh-pages -d build가 하는 일은 gh-pages가 build 폴더를
+  "homepage": "https://cobaltune.github.io/Movie"에 적은 웹사이트에
+  업로드하도록 함 */
+
+⇒ 우리가 한건 hompage를 적어주고, `script` 두 개(`deploy`, `predeploy`)를 만들어준 것뿐
+
+
+>> 뭔가를 수정하고, 업데이트하고 싶다면
+
+  // vsc terminal
+  npm run deploy
+
+⇒ 자동으로 프로젝트가 `build`되고, 생성된 “build” 폴더가 Github Pages에 `push`됨
