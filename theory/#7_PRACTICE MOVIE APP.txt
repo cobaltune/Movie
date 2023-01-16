@@ -741,3 +741,146 @@ URL에 따라서 router는
 - [localhost:3000/movies/123](http://localhost:3000/movies/123) → Detail component를 보여줌
 
 그래서 App.js는 이제 새로운 component를 `render`하게 될 텐데 이건 다음 시간에
+
+
+#7.5 React Router
+
+배울 것
+- react-router-dom 사용법
+
+vsc terminal (Recat Router 설치할 때)
+
+  npm i react-router-dom
+  // 최신 버전으로 다운로드 @6.6.2 (23.01.16 기준)
+
+
+react-router-dom을 사용하기 위해서는 우선 몇 가지를 import해야 함
+
+  import { BrowserRouter as Router, Switch, Router } from 'react-router-dom';
+
+
+`Switch`
+: `Route`를 찾는 건데, 그 `Route`는 URL(localhost:3000`/movies/12121212`)을 의미함, 그리고 `Route`를 찾으면 컴포넌트를 렌더링함
+
+>> 이제 `Switch`는 더이상 지원하지 않음, 그 역할을 `Routes`가 대신함
+
+  import { BrowserRouter as Router, Routes, Router } from 'react-router-dom';
+
+따라서 이와 같이 변경해야 함
+
+
++) `Router` 안에 `Switch` component를 넣어준 이유
+   : 한 번에 하나의 `Route`만 렌더링 하기 위해서
+
+*React Router에서는 원한다면, 두 개의 Route를 한 번에 렌더링 할 수 있음
+
+
+>> 또한 `Route` component 사이에 자식 component를 넣지 않고, element `prop`에 자식 component를 할당하도록 바뀜
+
+  <Route path='/' element={<Home />} />
+
+따라서 이와 같이 변경해야 함
+
+
+`import`에는 두 가지 종류가 있음 (URL의 생김새가 다름)
+
+  - `Browser Router` : localhost:3000/movie : 일반적인 방식
+  - `Hash Router` : localhost:3000/#/movie : 잘 쓰이진 않음
+
+
+`Route` 안에다가 컴포넌트를 써줄 건데 (2개의 `Route`)
+
+  1. user가 Home 화면으로 갈 때 사용할 `Route`
+
+    import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+    import Home from './routes/Home';
+
+    function App() {
+      return (
+        <Router>
+          <Routes>
+            <Route path='/' element={<Home />} />
+          </Routes>
+        </Router>
+      );
+    }
+
+    export default App;
+
+    /* 코드 해석
+    Router를 만들고, 그 안에 Route를 만들고, 누군가 우리 웹사이트의 "/" (홈화면으로 간다는 의미) url에 있다면
+    Home 컴포넌트를 보여줌 */
+  
+"/" 이게 홈화면으로 간다는 의미, user가 이 경로에 있으면 우리는 `Home Route`를 렌더링해줌
+
+`Router`
+: `Router` 안에 들어가는 건 우리가 user에게 (user가 있는 URL에 따라서) 보여주고 싶은 것들
+
+  2. user가 Detail 화면으로 갈 때 사용할 `Route`
+
+    import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+    import Home from './routes/Home';
+    import Detail from './routes/Detail';
+
+    function App() {
+      return (
+        <Router>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/movie' element={<Detail />} />
+          </Routes>
+        </Router>
+      );
+    }
+
+    export default App;
+
+*알맞은 component를 잘 import하기만 하면 돼 !!! 된다고 !!! 기억해 !!!
+
+
+한 `Route`에서 다른 `Route`로 가는 방법 = user가 영화 제목을 클릭하면 Detail 화면으로 가도록
+
+대부분 [Movie.js]로 가서 `<h2>`안에 `<a>`의 `href` 속성이 떠오를테지만, (되긴 함 다만 ) 페이지 전체가 새로고침되기 때문에 react의 장점을 깎아 먹음.
+따라서 재실행되는 것을 막기위해 react-router-dom에서 `import`한 `Link`를 사용함
+
+`Link`
+: 브라우저의 새로고침 없이도 user를 다른 페이지로 이동시켜주는 component, 원하는 곳 어디에든 사용할 수 있음
+
+  import PropTypes from 'prop-types';
+  import { Link } from 'react-router-dom';
+
+  function Movie({ mediumCoverImage, title, year, summary, genres }) {
+    return (
+      <div>
+        <img src={mediumCoverImage} alt={title}></img>
+        <h2>
+          <Link to='/movie'>{title}</Link>
+        </h2>
+        <h3>({year})</h3>
+        <p>{summary}</p>
+        <ul>
+          {genres.map((g) => (
+            <li key={g}>{g}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
+  Movie.propTypes = {
+    mediumCoverImage: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    year: PropTypes.string.isRequired,
+    summary: PropTypes.string.isRequired,
+    genres: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  export default Movie;
+
+영화 제목에 걸린 링크를 클릭하면 Detail 화면으로 넘어가지만 브라우저가 새로고침되지는 않음
+(이러면 빠르게 반응하는 것처럼 보임)
+
+
+>> Next video
+다이나믹(동적) URL을 어떻게 만드는지에 대해
+(+ 현재 movie는 아무런 정보를 넘겨주지 않음 따라서 movie로 가면 movie id를 얻도록)
