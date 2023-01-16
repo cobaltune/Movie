@@ -646,7 +646,7 @@ ID를 얻을건데, 다음 영상에서 링크를 만들거라서 필요함
                 mediumCoverImage={movie.medium_cover_image}
                 title={movie.title}
                 year={movie.year}
-                summary={movie.summery}
+                summary={movie.summary}
                 genres={movie.genres}
               />
             ))}
@@ -705,7 +705,7 @@ ID를 얻을건데, 다음 영상에서 링크를 만들거라서 필요함
   Movie.propTypes = {
     mediumCoverImage: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
     summary: PropTypes.string.isRequired,
     genres: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
@@ -870,7 +870,7 @@ react-router-dom을 사용하기 위해서는 우선 몇 가지를 import해야 
   Movie.propTypes = {
     mediumCoverImage: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    year: PropTypes.string.isRequired,
+    year: PropTypes.number.isRequired,
     summary: PropTypes.string.isRequired,
     genres: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
